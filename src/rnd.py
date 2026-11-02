@@ -26,7 +26,6 @@ Check your work, offline, with::
     pytest -vv ./src/test_rnd.py
 """
 
-from turtle import forward
 
 import numpy as np
 from scipy.optimize import isotonic_regression
