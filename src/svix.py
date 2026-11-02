@@ -30,6 +30,8 @@ derives it. Check your work, offline, with::
     pytest -vv ./src/test_svix.py
 """
 
+from math import tau
+
 import numpy as np
 
 HORIZON_DAYS = 30
@@ -61,11 +63,22 @@ def svix_squared(cdf):
     >>> round(svix_squared(risk_neutral_cdf(smile, rate=0.03)), 4)
     0.0401
     """
-    ## TODO: Implement this function as specified in the docstring above.
-    raise NotImplementedError(
-        "Implement svix_squared (see HOMEWORK INSTRUCTIONS at the top of this file)"
-    )
+    tau = cdf.maturity_years
+    rf = cdf.forward
+    grid = cdf.grid
 
+    lo = grid <= rf
+    hi = grid > rf
+
+    put_x = np.append(grid[lo], rf)
+    put_y = np.append(cdf.put_grid[lo], np.interp(rf, grid, cdf.put_grid))
+    call_x = np.insert(grid[hi], 0, rf)
+    call_y = np.insert(cdf.call_grid[hi], 0, np.interp(rf, grid, cdf.call_grid))
+
+    put_integral = np.trapezoid(put_y, put_x)
+    call_integral = np.trapezoid(call_y, call_x)
+
+    return float(2.0 / (tau * rf) * (put_integral + call_integral))
 
 def interpolate_variance(svix2_near, tau_near, svix2_far, tau_far, horizon_years=HORIZON_DAYS / 365.0):
     """Constant-maturity SVIX^2 from two bracketing expirations.
