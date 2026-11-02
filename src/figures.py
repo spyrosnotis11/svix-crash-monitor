@@ -120,7 +120,7 @@ def fig_futures_curve(curve, on, underlyings=()):
     fig.update_layout(xaxis_title="Expiration (third Friday of the contract month)",
                       yaxis_title="Price above the nearest contract (%)",
                       legend=dict(orientation="h", y=1.02, yanchor="bottom", x=0))
-    return style(fig, height=440, title=_title(f"The E-mini S&P 500 futures curve, settlements of {pd.Timestamp(on):%B %-d, %Y}"),
+    return style(fig, height=440, title=_title(f"The E-mini S&P 500 futures curve, settlements of {pd.Timestamp(on):%B }{pd.Timestamp(on).day}{pd.Timestamp(on):, %Y}"),
                  margin=dict(l=70, r=20, t=90, b=50))
 
 
@@ -155,7 +155,7 @@ def fig_expiration_calendar(session, curve, on, horizon_days=smile.HORIZON_DAYS)
     fig.update_layout(yaxis=dict(title="Underlying future", categoryorder="array", categoryarray=order),
                       xaxis_title="Expiration date",
                       legend=dict(orientation="h", y=1.02, yanchor="bottom", x=0))
-    return style(fig, height=380, title=_title(f"What expires when, as of {on:%B %-d, %Y}"),
+    return style(fig, height=380, title=_title(f"What expires when, as of {on:%B }{on.day}{on:, %Y}"),
                  margin=dict(l=90, r=20, t=90, b=50))
 
 
@@ -187,7 +187,7 @@ def fig_parity(chain, forward, rate):
                       yaxis_title="Call minus put (index points)",
                       legend=dict(orientation="h", y=1.02, yanchor="bottom", x=0))
     expiry = pd.Timestamp(chain["expiration"].iloc[0])
-    return style(fig, height=460, title=_title(f"Put-call parity, options expiring {expiry:%B %-d, %Y} ({days} days)"),
+    return style(fig, height=460, title=_title(f"Put-call parity, options expiring {expiry:%B }{expiry.day}{expiry:, %Y} ({days} days)"),
                  margin=dict(l=70, r=20, t=90, b=50))
 
 
@@ -318,7 +318,7 @@ def fig_surface(options, session, date, rate):
         xaxis_title="Strike / index level", yaxis_title="Days to expiration", zaxis_title="Implied vol (%)",
         camera=dict(eye=dict(x=1.6, y=-1.6, z=0.9)), aspectratio=dict(x=1.2, y=1.2, z=0.7),
     )
-    return style(fig, height=600, title=f"The E-mini S&P 500 volatility surface, settlements of {pd.Timestamp(date):%B %-d, %Y}")
+    return style(fig, height=600, title=f"The E-mini S&P 500 volatility surface, settlements of {pd.Timestamp(date):%B }{pd.Timestamp(date).day}{pd.Timestamp(date):, %Y}")
 
 
 # --------------------------------------------------------------------------
@@ -369,7 +369,7 @@ def fig_distribution(options, session, date, rate, n_expiries=5):
     for i, row in enumerate(expiries.itertuples()):
         mask = [False] * n
         mask[i * traces_per:(i + 1) * traces_per] = [True] * traces_per
-        buttons.append(dict(label=f"{int(row.days_to_expiry)} days ({row.expiration:%b %-d})",
+        buttons.append(dict(label=f"{int(row.days_to_expiry)} days ({row.expiration:%b }{row.expiration.day})",
                             method="update", args=[{"visible": mask}]))
     for r in (1, 2, 3):
         fig.add_vline(x=0.8, line_dash="dot", line_color=GREY, row=r, col=1)
@@ -405,7 +405,7 @@ def fig_svix_weights(cdf, date):
                       xaxis_title="Strike / index level",
                       yaxis_title="Share of the total, per 1% band of strikes (%)")
     days = int(round(tau * 365))
-    return style(fig, height=500, title=_title(f"Where SVIX comes from: {days}-day E-mini options, {pd.Timestamp(date):%B %-d, %Y}"),
+    return style(fig, height=500, title=_title(f"Where SVIX comes from: {days}-day E-mini options, {pd.Timestamp(date):%B }{pd.Timestamp(date).day}{pd.Timestamp(date):, %Y}"),
                  margin=dict(l=60, r=20, t=90, b=50))
 
 
@@ -440,7 +440,7 @@ def fig_crash_beliefs(cdf, date, gammas=(1, 2, 3, 4, 5)):
         legend=dict(orientation="h", y=1.02, yanchor="bottom", x=0),
     )
     days = int(round(cdf.maturity_years * 365))
-    return style(fig, height=560, title=_title(f"Three beliefs about a crash, {days}-day options, {pd.Timestamp(date):%B %-d, %Y}"),
+    return style(fig, height=560, title=_title(f"Three beliefs about a crash, {days}-day options, {pd.Timestamp(date):%B }{pd.Timestamp(date).day}{pd.Timestamp(date):, %Y}"),
                  margin=dict(l=70, r=20, t=90, b=110))
 
 
